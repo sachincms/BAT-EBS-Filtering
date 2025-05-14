@@ -35,8 +35,6 @@ def retrieve():
         }
 
         scraped_documents = mongodb_handler_scraped.read_data(query)
-        processed_documents = mongodb_handler_processed.read_data()
-        existing_ids = [doc['_id'] for doc in processed_documents]
 
         mongodb_handler_scraped.close_connection()
         mongodb_handler_processed.close_connection()
@@ -44,4 +42,4 @@ def retrieve():
     except Exception as ex:
         logging.error(ex)
     
-    return scraped_documents, existing_ids
+    return scraped_documents
