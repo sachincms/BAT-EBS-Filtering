@@ -1,9 +1,8 @@
 import streamlit as st
 from utils.db_loader import load_to_mongodb
 from utils.retrieve_data import retrieve
-from config import CONTENT_UNAVAILABLE_MESSAGE
 
-documents, existing_ids = retrieve()
+documents = retrieve()
 
 def display_documents(documents, relevant_list):
     st.title("Document Relevance")
@@ -22,16 +21,10 @@ def display_documents(documents, relevant_list):
 
             if st.button("Proceed", key=f"{idx}_proceed_button"):
                 relevant_documents = [doc for idx, doc in enumerate(documents) if idx in relevant_list]
-                non_duplicate_documents = [doc for doc in relevant_documents if doc['_id'] not in existing_ids]
-                duplicate_document_count = len(relevant_documents) - len(non_duplicate_documents)
-                load_to_mongodb(non_duplicate_documents)
+                load_to_mongodb(relevant_documents)
 
-                st.write(f"Selected documents: {len(relevant_documents)}")
-                st.write(f"Inserted documents: {len(non_duplicate_documents)}")
-                if duplicate_document_count > 0:
-                    st.write(f"The remaining {duplicate_document_count} documents are duplicates.")
-
-                total_inserted_count += len(non_duplicate_documents)
+                st.write(f"Inserted {len(relevant_documents)} documents.")
+                total_inserted_count += len(relevant_documents)
                 relevant_list = []
             
             st.divider()
@@ -52,22 +45,18 @@ def display_documents(documents, relevant_list):
 
         relevant_documents = [doc for idx, doc in enumerate(documents) if idx in relevant_list]
 
+        st.write(f"Relevant documents: {len(relevant_documents)}")
         irrelevant_count = len(documents) - len(relevant_documents)
-        st.write("Irrelevant documents: \n" , irrelevant_count)
+        st.write(f"Irrelevant documents: \n{irrelevant_count}")
     
     st.divider()
 
     if st.button("Proceed", key="final_proceed_button"):
         relevant_documents = [doc for idx, doc in enumerate(documents) if idx in relevant_list]
-        non_duplicate_documents = [doc for doc in relevant_documents if doc['_id'] not in existing_ids]
-        duplicate_document_count = len(relevant_documents) - len(non_duplicate_documents)
-        load_to_mongodb(non_duplicate_documents)
+        load_to_mongodb(relevant_documents)
 
-        st.write(f"Selected documents: {len(relevant_documents)}")
-        st.write(f"Inserted documents: {len(non_duplicate_documents)}")
-        if duplicate_document_count > 0:
-            st.write(f"The remaining {duplicate_document_count} documents are duplicates.")
-        total_inserted_count += len(non_duplicate_documents)
+        st.write(f"Inserted {len(relevant_documents)} documents.")
+        total_inserted_count += len(relevant_documents)
 
         with st.container(border=True):
             st.header(f"Added a total of {len(total_inserted_count)} to the database. You may close the app now.")
