@@ -12,24 +12,8 @@ def display_documents(documents, relevant_list):
     already_displayed = []
     total_inserted_count = 0
     for idx, doc in enumerate(documents):
-        if idx > 0 and idx % 50 == 0:
-            if st.button("Count", key=f"{idx}_count_button"):
-                st.write("Relevant list: ", relevant_list)
-                relevant_documents = [doc for idx, doc in enumerate(documents) if idx in relevant_list]
-                irrelevant_count = len(documents) - len(relevant_documents)
-                st.write("Irrelevant documents: \n" , irrelevant_count)
 
-            if st.button("Proceed", key=f"{idx}_proceed_button"):
-                relevant_documents = [doc for idx, doc in enumerate(documents) if idx in relevant_list]
-                load_to_mongodb(relevant_documents)
-
-                st.write(f"Inserted {len(relevant_documents)} documents.")
-                total_inserted_count += len(relevant_documents)
-                relevant_list = []
-            
-            st.divider()
-
-        key = doc['title'] if doc['title'] != 'Content Unavailable' else ''
+        key = doc['article_links']
         if key in already_displayed:
             continue
         already_displayed.append(key)
@@ -39,7 +23,7 @@ def display_documents(documents, relevant_list):
         if checkbox:
             relevant_list.append(idx)
     
-    if st.button("Count", key="final_count_button"):
+    if st.button("Count", key="count_button"):
 
         st.write("Relevant list: ", relevant_list)
 
@@ -51,7 +35,7 @@ def display_documents(documents, relevant_list):
     
     st.divider()
 
-    if st.button("Proceed", key="final_proceed_button"):
+    if st.button("Proceed", key="proceed_button"):
         relevant_documents = [doc for idx, doc in enumerate(documents) if idx in relevant_list]
         load_to_mongodb(relevant_documents)
 

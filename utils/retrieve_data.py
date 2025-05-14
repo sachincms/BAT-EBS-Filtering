@@ -1,6 +1,4 @@
-import pandas as pd
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 import pymongo
 import logging
 import os

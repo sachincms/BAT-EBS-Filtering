@@ -1,5 +1,4 @@
 import logging
-from dotenv import load_dotenv
 import os
 import sys
 current_path = os.path.abspath(__file__)
