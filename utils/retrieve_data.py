@@ -10,11 +10,11 @@ from handlers.MongoDBHandler import MongoDBHandler
 from config import MONGODB_SCRAPED_COLLECTION, MONGODB_PROCESSED_COLLECTION
 
 
-def retrieve():
+def retrieve(skip = 0, limit = 20):
     '''
     Accesses the MongoDB database and returns a list of existing documents.
     '''
-
+    scraped_documents = []
     try:
         mongodb_handler_scraped = MongoDBHandler(MONGODB_SCRAPED_COLLECTION)
         mongodb_handler_processed = MongoDBHandler(MONGODB_PROCESSED_COLLECTION)
@@ -32,7 +32,7 @@ def retrieve():
             }
         }
 
-        scraped_documents = mongodb_handler_scraped.read_data(query)
+        scraped_documents = mongodb_handler_scraped.read_data(query = query, skip = skip, limit = limit)
 
         mongodb_handler_scraped.close_connection()
         mongodb_handler_processed.close_connection()
@@ -41,3 +41,8 @@ def retrieve():
         logging.error(ex)
     
     return scraped_documents
+
+
+def count_total_documents():
+    mongodb_handler_scraped = MongoDBHandler(MONGODB_SCRAPED_COLLECTION)
+    return mongodb_handler_scraped.get_total_count()
