@@ -30,7 +30,7 @@ class MongoDBHandler():
         logging.info(f"Inserted {len(inserted_ids)} records into the database.")
 
 
-    def read_data(self, query=None, sort=None, limit=None):
+    def read_data(self, query=None, skip = 0, sort=None, limit=None):
         if query:
             data = self.collection.find(query)
         else:
@@ -38,6 +38,9 @@ class MongoDBHandler():
 
         if sort:
             data = data.sort(sort)
+
+        if skip:
+            data = data.skip(skip)
 
         if limit:
             data = data.limit(limit)
@@ -51,6 +54,9 @@ class MongoDBHandler():
 
     def delete_data(self, data):
         self.collection.delete_one(data)
-    
+
+    def get_total_count(self):
+        return self.collection.count_documents({})
+          
     def close_connection(self):
         self.client.close()
