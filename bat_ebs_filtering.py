@@ -106,7 +106,7 @@ if st.button("Proceed", key="proceed_button"):
     total_inserted_count += len(relevant_documents)
 
     with st.container(border=True):
-        st.header(f"Added a total of {total_inserted_count} to the database. You may close the app now.")
+        st.header(f"Added a total of {total_inserted_count} to the database.")
 
 
 
